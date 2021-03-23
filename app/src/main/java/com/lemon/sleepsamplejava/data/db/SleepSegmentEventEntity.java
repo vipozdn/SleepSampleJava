@@ -25,9 +25,8 @@ public class SleepSegmentEventEntity {
         this.status = status;
     }
 
-    public SleepSegmentEventEntity from(SleepSegmentEvent sleepSegmentEvent) {
-        this.startTimeMillis = sleepSegmentEvent.getStartTimeMillis();
-        this.endTimeMillis = sleepSegmentEvent.getEndTimeMillis();
-        this.status = sleepSegmentEvent.getStatus();
+    public static SleepSegmentEventEntity from(SleepSegmentEvent sleepSegmentEvent) {
+        return new SleepSegmentEventEntity(sleepSegmentEvent.getStartTimeMillis(),
+                sleepSegmentEvent.getEndTimeMillis(), sleepSegmentEvent.getStatus());
     }
 }
