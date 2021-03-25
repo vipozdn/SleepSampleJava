@@ -1,5 +1,7 @@
 package com.lemon.sleepsamplejava.data;
 
+import com.lemon.sleepsamplejava.data.db.SleepClassifyEventDao;
+import com.lemon.sleepsamplejava.data.db.SleepSegmentEventDao;
 import com.lemon.sleepsamplejava.data.sharedpreferences.SleepSubscriptionStatus;
 
 public class SleepRepository {
