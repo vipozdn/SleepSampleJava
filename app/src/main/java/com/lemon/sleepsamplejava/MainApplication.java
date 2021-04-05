@@ -3,6 +3,7 @@ package com.lemon.sleepsamplejava;
 import android.app.Application;
 import android.content.Context;
 
+import com.lemon.sleepsamplejava.data.SleepRepository;
 import com.lemon.sleepsamplejava.data.db.SleepDatabase;
 import com.lemon.sleepsamplejava.data.sharedpreferences.SleepSubscriptionStatus;
 

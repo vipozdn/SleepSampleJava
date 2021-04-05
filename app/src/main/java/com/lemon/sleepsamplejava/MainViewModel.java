@@ -29,5 +29,5 @@ public class MainViewModel extends ViewModel {
         sleepRepository.updateSubscribedToSleepData(subscribed);
     }
 
-    
+
 }
