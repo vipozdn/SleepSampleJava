@@ -1,14 +1,19 @@
 package com.lemon.sleepsamplejava;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.PendingIntent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.lemon.sleepsamplejava.data.db.SleepClassifyEventEntity;
+import com.lemon.sleepsamplejava.data.db.SleepSegmentEventEntity;
 import com.lemon.sleepsamplejava.databinding.ActivityMainBinding;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,11 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String sleepSegmentOutput = "";
     private String sleepClassifyOutput = "";
-
     private boolean subscribedToSleepData = false;
 
-
-
+    private PendingIntent sleepPendingIntent;
     private final String TAG = "MainActivity";
 
 
@@ -36,6 +39,40 @@ public class MainActivity extends AppCompatActivity {
         mainApplication = (MainApplication) getApplication();
         mainViewModel = new ViewModelProvider(this, new MainViewModelFactory(mainApplication.getRepository())).get(MainViewModel.class);
 
+        mainViewModel.subscribedToSleepDataLiveData.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean newSubscribedToSleepData) {
+                if (subscribedToSleepData != newSubscribedToSleepData) {
+                    subscribedToSleepData = newSubscribedToSleepData;
+                }
+            }
+        });
+
+        mainViewModel.allSleepSegments.observe(this, new Observer<List<SleepSegmentEventEntity>>() {
+            @Override
+            public void onChanged(List<SleepSegmentEventEntity> sleepSegmentEventEntities) {
+                Log.d(TAG, "sleepSegmentEventEntities: " + sleepSegmentEventEntities);
+
+                // Todo: format String
+                if (!sleepSegmentEventEntities.isEmpty()) {
+                    sleepSegmentOutput = sleepSegmentEventEntities.toString();
+                    updateOutput();
+                }
+            }
+        });
+
+        mainViewModel.allSleepClassifyEventEntities.observe(this, new Observer<List<SleepClassifyEventEntity>>() {
+            @Override
+            public void onChanged(List<SleepClassifyEventEntity> sleepClassifyEventEntities) {
+                Log.d(TAG, "sleepClassifyEventEntities: " + sleepClassifyEventEntities);
+
+                // Todo: format String
+                if (!sleepClassifyEventEntities.isEmpty()) {
+                    sleepClassifyOutput = sleepClassifyEventEntities.toString();
+                    updateOutput();
+                }
+            }
+        });
     }
 
     private void setSubscribedToSleepData(boolean newSubscribedToSleepData) {
