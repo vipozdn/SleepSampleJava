@@ -10,8 +10,10 @@ import com.google.android.gms.location.SleepClassifyEvent;
 import com.google.android.gms.location.SleepSegmentEvent;
 import com.lemon.sleepsamplejava.MainApplication;
 import com.lemon.sleepsamplejava.data.SleepRepository;
+import com.lemon.sleepsamplejava.data.db.SleepClassifyEventEntity;
 import com.lemon.sleepsamplejava.data.db.SleepSegmentEventEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SleepReceiver extends BroadcastReceiver {
@@ -43,13 +45,19 @@ public class SleepReceiver extends BroadcastReceiver {
     private void addSleepSegmentEventsToDataBase(SleepRepository repository,
                                                  List<SleepSegmentEvent> sleepSegmentEvents) {
         if (!sleepSegmentEvents.isEmpty()) {
-            
+            ArrayList<SleepSegmentEventEntity> convertedToEntityVersion =
+                    SleepSegmentEventEntity.from(sleepSegmentEvents);
+            repository.insertSleepSegments(convertedToEntityVersion);
         }
     }
 
     private void addSleepClassifyEventsToDataBase(SleepRepository repository,
                                                   List<SleepClassifyEvent> sleepClassifyEvents) {
-
+        if (!sleepClassifyEvents.isEmpty()) {
+            ArrayList<SleepClassifyEventEntity> convertedToEntityVersion =
+                    SleepClassifyEventEntity.from(sleepClassifyEvents);
+            repository.insertSleepClassifyEvents(convertedToEntityVersion);
+        }
 
     }
 

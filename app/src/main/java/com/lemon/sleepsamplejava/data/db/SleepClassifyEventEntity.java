@@ -5,6 +5,10 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.location.SleepClassifyEvent;
+import com.google.android.gms.location.SleepSegmentEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "sleep_classify_events_table")
 public class SleepClassifyEventEntity {
@@ -36,5 +40,24 @@ public class SleepClassifyEventEntity {
                 sleepClassifyEvent.getMotion(),
                 sleepClassifyEvent.getLight()
         );
+    }
+
+    public static ArrayList<SleepClassifyEventEntity> from(List<SleepClassifyEvent> sleepClassifyEvents) {
+        ArrayList<SleepClassifyEventEntity> eventEntities = new ArrayList<>();
+
+        for (int i = 0; i < sleepClassifyEvents.size(); i++) {
+            SleepClassifyEvent iEvent = sleepClassifyEvents.get(i);
+            SleepClassifyEventEntity sleepClassifyEventEntity =
+                    new SleepClassifyEventEntity(
+                            ((int)(iEvent.getTimestampMillis() / 1000)),
+                            iEvent.getConfidence(),
+                            iEvent.getMotion(),
+                            iEvent.getLight()
+                    );
+            eventEntities.add(sleepClassifyEventEntity);
+        }
+
+        return eventEntities;
+
     }
 }
