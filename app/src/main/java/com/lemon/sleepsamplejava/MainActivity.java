@@ -1,16 +1,23 @@
 package com.lemon.sleepsamplejava;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
 import android.app.PendingIntent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.lemon.sleepsamplejava.data.db.SleepClassifyEventEntity;
 import com.lemon.sleepsamplejava.data.db.SleepSegmentEventEntity;
 import com.lemon.sleepsamplejava.databinding.ActivityMainBinding;
+import com.lemon.sleepsamplejava.receiver.SleepReceiver;
 
 import java.util.Calendar;
 import java.util.List;
@@ -73,7 +80,36 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        sleepPendingIntent = SleepReceiver.createSleepReceiverPendingIntent(this);
     }
+
+    public void onClickRequestSleepData(View view) {
+        if(activityRecognitionPermissionApproved()) {
+            if (subscribedToSleepData) {
+                unsubscribeToSleepSegmentUpdates(getApplicationContext(), sleepPendingIntent);
+            } else {
+                subscribeToSleepSegmentUpdates(getApplicationContext(), sleepPendingIntent);
+            }
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION);
+        }
+    }
+
+    private boolean activityRecognitionPermissionApproved() {
+        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACTIVITY_RECOGNITION);
+    }
+
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    binding.outputTextView.setText(getString(R.string.permission_approved));
+                } else {
+                    displayPermissionSettingsSnackBar();
+                }
+            });
+
 
     private void setSubscribedToSleepData(boolean newSubscribedToSleepData) {
         this.subscribedToSleepData = newSubscribedToSleepData;

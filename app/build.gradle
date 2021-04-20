@@ -42,6 +42,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // Activity
+    implementation "androidx.activity:activity:1.2.2"
+    // Fragment
+    implementation "androidx.fragment:fragment:1.3.2"
 
     // Room components
     def room_version = "2.2.6"
