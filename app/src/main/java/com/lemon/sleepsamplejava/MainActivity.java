@@ -6,14 +6,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewbinding.BuildConfig;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.lemon.sleepsamplejava.data.db.SleepClassifyEventEntity;
 import com.lemon.sleepsamplejava.data.db.SleepSegmentEventEntity;
 import com.lemon.sleepsamplejava.databinding.ActivityMainBinding;
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickRequestSleepData(View view) {
-        if(activityRecognitionPermissionApproved()) {
+        if (activityRecognitionPermissionApproved()) {
             if (subscribedToSleepData) {
                 unsubscribeToSleepSegmentUpdates(getApplicationContext(), sleepPendingIntent);
             } else {
@@ -109,6 +114,29 @@ public class MainActivity extends AppCompatActivity {
                     displayPermissionSettingsSnackBar();
                 }
             });
+
+    private void displayPermissionSettingsSnackBar() {
+        Snackbar.make(
+                binding.getRoot(),
+                R.string.permission_rational,
+                Snackbar.LENGTH_LONG
+        )
+                .setAction(R.string.action_settings, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts(
+                                "package",
+                                getPackageName(),
+                                null);
+                        intent.setData(uri);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        Log.d(TAG, "uri: " + uri.toString());
+                    }
+                }).show();
+    }
 
 
     private void setSubscribedToSleepData(boolean newSubscribedToSleepData) {
