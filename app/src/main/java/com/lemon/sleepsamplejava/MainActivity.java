@@ -2,6 +2,7 @@ package com.lemon.sleepsamplejava;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -9,7 +10,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewbinding.BuildConfig;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,6 +21,11 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.SleepSegmentRequest;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.lemon.sleepsamplejava.data.db.SleepClassifyEventEntity;
 import com.lemon.sleepsamplejava.data.db.SleepSegmentEventEntity;
@@ -99,6 +107,53 @@ public class MainActivity extends AppCompatActivity {
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION);
         }
+    }
+
+    // Permission is checked before this method is called.
+    @SuppressLint("MissingPermission")
+    private void subscribeToSleepSegmentUpdates(Context context, PendingIntent pendingIntent) {
+        Log.d(TAG, "requestSleepSegmentUpdates()");
+
+        Task<Void> task = ActivityRecognition.getClient(context).requestSleepSegmentUpdates(
+                pendingIntent,
+                // Registers for both [SleepSegmentEvent] and [SleepClassifyEvent] data.
+                SleepSegmentRequest.getDefaultSleepSegmentRequest()
+        );
+
+        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mainViewModel.updateSubscribedToSleepData(true);
+                Log.d(TAG, "Successfully subscribed to sleep data.");
+            }
+        });
+
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Exception when subscribing to sleep data: " + e);
+            }
+        });
+    }
+
+    private void unsubscribeToSleepSegmentUpdates(Context context, PendingIntent pendingIntent) {
+        Log.d(TAG, "unsubscribeToSleepSegmentUpdates()");
+        Task<Void> task = ActivityRecognition.getClient(context).removeSleepSegmentUpdates(pendingIntent);
+
+        task.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mainViewModel.updateSubscribedToSleepData(false);
+                Log.d(TAG, "Successfully unsubscribed to sleep data.");
+            }
+        });
+
+        task.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Exception when unsubscribing to sleep data: " + e);
+            }
+        });
     }
 
     private boolean activityRecognitionPermissionApproved() {
