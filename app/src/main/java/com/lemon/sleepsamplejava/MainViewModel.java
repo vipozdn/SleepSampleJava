@@ -14,15 +14,17 @@ import java.util.List;
 public class MainViewModel extends ViewModel {
 
     private SleepRepository sleepRepository;
-    public LiveData<Boolean> subscribedToSleepDataLiveData = sleepRepository.subscribedToSleepLiveData;
+    public LiveData<Boolean> subscribedToSleepDataLiveData;
 
-    public LiveData<List<SleepSegmentEventEntity>> allSleepSegments = sleepRepository.allSleepSegmentEvents;
+    public LiveData<List<SleepSegmentEventEntity>> allSleepSegments;
 
-    public LiveData<List<SleepClassifyEventEntity>> allSleepClassifyEventEntities
-            = sleepRepository.allSleepClassifyEvents;
+    public LiveData<List<SleepClassifyEventEntity>> allSleepClassifyEventEntities;
 
     public MainViewModel(SleepRepository sleepRepository) {
         this.sleepRepository = sleepRepository;
+        this.subscribedToSleepDataLiveData = sleepRepository.subscribedToSleepLiveData;
+        this.allSleepSegments = sleepRepository.allSleepSegmentEvents;
+        this.allSleepClassifyEventEntities = sleepRepository.allSleepClassifyEvents;
     }
 
     public void updateSubscribedToSleepData(boolean subscribed) {

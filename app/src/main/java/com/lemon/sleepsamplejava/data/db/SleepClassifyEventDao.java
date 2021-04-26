@@ -18,16 +18,16 @@ public interface SleepClassifyEventDao {
     LiveData<List<SleepClassifyEventEntity>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<SleepClassifyEventEntity> insert(SleepClassifyEventEntity sleepClassifyEventEntity);
+    void insert(SleepClassifyEventEntity sleepClassifyEventEntity);
 
     // Returns the number of sleepClassifyEventEntities inserted
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<Integer> insertAll(List<SleepClassifyEventEntity> sleepClassifyEventEntities);
+    void insertAll(List<SleepClassifyEventEntity> sleepClassifyEventEntities);
 
     @Delete
-    ListenableFuture<SleepClassifyEventEntity> delete(SleepClassifyEventEntity sleepClassifyEventEntity);
+    void delete(SleepClassifyEventEntity sleepClassifyEventEntity);
 
     // Returns the number of sleepClassifyEventEntities deleted
     @Query("DELETE FROM sleep_classify_events_table")
-    ListenableFuture<Integer> deleteAll();
+    void deleteAll();
 }

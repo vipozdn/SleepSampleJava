@@ -18,8 +18,8 @@ public class SleepRepository {
 
     public LiveData<Boolean> subscribedToSleepLiveData;
 
-    public LiveData<List<SleepSegmentEventEntity>> allSleepSegmentEvents = sleepSegmentEventDao.getAll();
-    public LiveData<List<SleepClassifyEventEntity>> allSleepClassifyEvents = sleepClassifyEventDao.getAll();
+    public LiveData<List<SleepSegmentEventEntity>> allSleepSegmentEvents;
+    public LiveData<List<SleepClassifyEventEntity>> allSleepClassifyEvents;
 
 
     public SleepRepository(SleepSubscriptionStatus sleepSubscriptionStatus,
@@ -28,6 +28,9 @@ public class SleepRepository {
         this.sleepSubscriptionStatus = sleepSubscriptionStatus;
         this.sleepSegmentEventDao = sleepSegmentEventDao;
         this.sleepClassifyEventDao = sleepClassifyEventDao;
+
+        allSleepSegmentEvents = sleepSegmentEventDao.getAll();
+        allSleepClassifyEvents = sleepClassifyEventDao.getAll();
 
         subscribedToSleepLiveData = sleepSubscriptionStatus;
     }

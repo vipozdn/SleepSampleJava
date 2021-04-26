@@ -18,17 +18,17 @@ public interface SleepSegmentEventDao {
     LiveData<List<SleepSegmentEventEntity>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<SleepSegmentEventEntity> insert(SleepSegmentEventEntity sleepSegmentEventEntity);
+    void insert(SleepSegmentEventEntity sleepSegmentEventEntity);
 
     // Returns the number of sleepSegmentEventEntities inserted
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    ListenableFuture<Integer> insertAll(List<SleepSegmentEventEntity> sleepSegmentEventEntities);
+    void insertAll(List<SleepSegmentEventEntity> sleepSegmentEventEntities);
 
     @Delete
-    ListenableFuture<SleepSegmentEventEntity> delete(SleepSegmentEventEntity sleepSegmentEventEntity);
+    void delete(SleepSegmentEventEntity sleepSegmentEventEntity);
 
     // Returns the number of sleepSegmentEventEntities deleted
     @Query("DELETE FROM sleep_segment_events_table")
-    ListenableFuture<Integer> deleteAll();
+    void deleteAll();
 
 }

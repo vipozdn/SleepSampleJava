@@ -19,7 +19,7 @@ public class MainViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass == MainViewModel.class) {
+        if (modelClass.isAssignableFrom(MainViewModel.class)) {
             return (T) new MainViewModel(sleepRepository);
         }
         throw new IllegalArgumentException();

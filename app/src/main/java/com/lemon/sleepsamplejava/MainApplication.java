@@ -2,6 +2,7 @@ package com.lemon.sleepsamplejava;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.lemon.sleepsamplejava.data.SleepRepository;
 import com.lemon.sleepsamplejava.data.db.SleepDatabase;
