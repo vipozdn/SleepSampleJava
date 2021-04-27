@@ -1,5 +1,7 @@
 package com.lemon.sleepsamplejava.data;
 
+import android.os.AsyncTask;
+
 import androidx.lifecycle.LiveData;
 
 import com.lemon.sleepsamplejava.data.db.SleepClassifyEventDao;
@@ -46,7 +48,13 @@ public class SleepRepository {
     }
 
     public void insertSleepSegments(List<SleepSegmentEventEntity> sleepSegmentEventEntities) {
-        sleepSegmentEventDao.insertAll(sleepSegmentEventEntities);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                sleepSegmentEventDao.insertAll(sleepSegmentEventEntities);
+            }
+        });
     }
 
     // Methods for SleepClassifyEventDao
@@ -56,6 +64,12 @@ public class SleepRepository {
     }
 
     public void insertSleepClassifyEvents(List<SleepClassifyEventEntity> sleepClassifyEventEntities) {
-        sleepClassifyEventDao.insertAll(sleepClassifyEventEntities);
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                sleepClassifyEventDao.insertAll(sleepClassifyEventEntities);
+            }
+        });
     }
 }
