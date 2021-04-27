@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean newSubscribedToSleepData) {
                 if (subscribedToSleepData != newSubscribedToSleepData) {
-                    subscribedToSleepData = newSubscribedToSleepData;
+                    Log.d(TAG, "newSubscribedToSleepData: " + newSubscribedToSleepData);
+                    setSubscribedToSleepData(newSubscribedToSleepData);
                 }
             }
         });
@@ -100,13 +101,16 @@ public class MainActivity extends AppCompatActivity {
     public void onClickRequestSleepData(View view) {
         if (activityRecognitionPermissionApproved()) {
             if (subscribedToSleepData) {
+                Log.d(TAG, "current state - subscribedToSleepData: unsubscribing");
                 unsubscribeToSleepSegmentUpdates(getApplicationContext(), sleepPendingIntent);
             } else {
+                Log.d(TAG, "current state - unsubscribedToSleepData: subscribing");
                 subscribeToSleepSegmentUpdates(getApplicationContext(), sleepPendingIntent);
             }
         } else {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION);
         }
+
     }
 
     // Permission is checked before this method is called.
