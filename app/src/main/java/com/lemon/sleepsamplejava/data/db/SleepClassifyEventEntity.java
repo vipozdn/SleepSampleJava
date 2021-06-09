@@ -5,7 +5,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.google.android.gms.location.SleepClassifyEvent;
-import com.google.android.gms.location.SleepSegmentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +13,8 @@ import java.util.List;
 public class SleepClassifyEventEntity {
 
     @PrimaryKey
-    @ColumnInfo(name = "time_stamp_seconds")
-    public int timestampSeconds;
+    @ColumnInfo(name = "time_stamp_millis")
+    public long timestampMillis;
 
     @ColumnInfo(name = "confidence")
     public int confidence;
@@ -26,8 +25,8 @@ public class SleepClassifyEventEntity {
     @ColumnInfo(name = "light")
     public int light;
 
-    public SleepClassifyEventEntity(int timestampSeconds, int confidence, int motion, int light) {
-        this.timestampSeconds = timestampSeconds;
+    public SleepClassifyEventEntity(long timestampMillis, int confidence, int motion, int light) {
+        this.timestampMillis = timestampMillis;
         this.confidence = confidence;
         this.motion = motion;
         this.light = light;
@@ -49,7 +48,7 @@ public class SleepClassifyEventEntity {
             SleepClassifyEvent iEvent = sleepClassifyEvents.get(i);
             SleepClassifyEventEntity sleepClassifyEventEntity =
                     new SleepClassifyEventEntity(
-                            ((int)(iEvent.getTimestampMillis() / 1000)),
+                            iEvent.getTimestampMillis(),
                             iEvent.getConfidence(),
                             iEvent.getMotion(),
                             iEvent.getLight()

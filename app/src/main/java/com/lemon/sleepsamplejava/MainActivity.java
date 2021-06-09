@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewbinding.BuildConfig;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -32,8 +31,10 @@ import com.lemon.sleepsamplejava.data.db.SleepSegmentEventEntity;
 import com.lemon.sleepsamplejava.databinding.ActivityMainBinding;
 import com.lemon.sleepsamplejava.receiver.SleepReceiver;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,11 +75,16 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<SleepSegmentEventEntity> sleepSegmentEventEntities) {
                 Log.d(TAG, "sleepSegmentEventEntities: " + sleepSegmentEventEntities);
 
-                // Todo: format String
                 if (!sleepSegmentEventEntities.isEmpty()) {
-                    sleepSegmentOutput = sleepSegmentEventEntities.toString();
+                    //sleepSegmentOutput = sleepSegmentEventEntities.toString();
+                    sleepSegmentOutput = sleepSegmentEventEntities.stream()
+                            .map(a -> "startTime: " + millisToTime(a.startTimeMillis) + ", " +
+                                    "endTime: " + millisToTime(a.endTimeMillis) + ", " +
+                                    "status: " + a.status)
+                            .collect(Collectors.joining("\n\n"));
                     updateOutput();
                 }
+                Log.d(TAG, "sleepSegmentOutput: " + sleepSegmentOutput);
             }
         });
 
@@ -87,11 +93,16 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<SleepClassifyEventEntity> sleepClassifyEventEntities) {
                 Log.d(TAG, "sleepClassifyEventEntities: " + sleepClassifyEventEntities);
 
-                // Todo: format String
                 if (!sleepClassifyEventEntities.isEmpty()) {
-                    sleepClassifyOutput = sleepClassifyEventEntities.toString();
+                    sleepClassifyOutput = sleepClassifyEventEntities.stream()
+                            .map(a -> "timestampMillis: " + millisToTime(a.timestampMillis)  + ", " +
+                                    "confidence: " + a.confidence + ", " +
+                                    "motion: " + a.motion + ", " +
+                                    "light: " + a.light)
+                            .collect(Collectors.joining("\n\n"));
                     updateOutput();
                 }
+                Log.d(TAG, "sleepClassifyOutput: " + sleepClassifyOutput);
             }
         });
 
@@ -229,5 +240,13 @@ public class MainActivity extends AppCompatActivity {
         String newOutput = header + sleepData;
         binding.outputTextView.setText(newOutput);
     }
+
+    private String millisToTime(long millis) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        return formatter.format(calendar.getTime());
+    }
+
 
 }

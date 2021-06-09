@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface SleepClassifyEventDao {
 
-    @Query("SELECT * FROM sleep_classify_events_table ORDER BY time_stamp_seconds DESC")
+    @Query("SELECT * FROM sleep_classify_events_table ORDER BY time_stamp_millis DESC")
     LiveData<List<SleepClassifyEventEntity>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
